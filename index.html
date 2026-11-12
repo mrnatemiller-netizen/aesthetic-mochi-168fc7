@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#14213d"><meta name="description" content="Understand the story from more than one political perspective.">
+<title>The Divide</title><link rel="manifest" href="./manifest.json">
+<style>
+:root{--navy:#14213d;--blue:#4776c7;--red:#c75b63;--ink:#20283a;--muted:#697386;--paper:#f5f7fb;--line:#e4e8f0}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:var(--navy);color:#fff;padding:20px max(18px,calc((100% - 1100px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-weight:800;letter-spacing:.04em;font-size:1.25rem}.brand span{color:#a9c5ff}
+header small{opacity:.75}nav{display:flex;gap:8px;flex-wrap:wrap;background:#fff;border-bottom:1px solid var(--line);padding:10px max(18px,calc((100% - 1100px)/2));position:sticky;top:0;z-index:2}
+nav button,.chip{border:0;border-radius:999px;padding:9px 14px;background:#edf1f8;color:#39445b;cursor:pointer;font-weight:650}
+nav button.active{background:var(--navy);color:#fff}
+main{max-width:1100px;margin:24px auto;padding:0 18px}
+.hero{background:linear-gradient(135deg,#14213d,#263f6c);color:#fff;padding:26px;border-radius:18px;margin-bottom:20px}
+.hero h1{font-size:clamp(1.8rem,5vw,2.7rem);line-height:1.08;margin:0 0 10px}.hero p{max-width:700px;color:#d8e2f8;margin:0}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:22px 0 12px}
+.topics{display:flex;gap:8px;flex-wrap:wrap}.chip.selected{background:#dce7ff;color:#163c83;outline:2px solid #8eaff2}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:0 4px 18px #17243d08}
+.card h3{margin:0 0 8px}.tag{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.left .tag{color:var(--blue)}.right .tag{color:var(--red)}
+.story{border-top:1px solid var(--line);padding:13px 0}.story:first-of-type{border-top:0}.story a{color:#243f79;font-weight:750;text-decoration:none}.story a:hover{text-decoration:underline}.story p{margin:5px 0;color:var(--muted);font-size:.92rem}
+.note{font-size:.85rem;color:var(--muted)}.callout{background:#fff;border:1px solid var(--line);padding:18px;border-radius:15px;margin-top:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.two h3{margin-top:0}
+input,select{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font:inherit}
+button.primary{background:var(--navy);color:white;border:0;border-radius:10px;padding:11px 15px;font-weight:750;cursor:pointer}
+footer{max-width:1100px;margin:28px auto;padding:18px;color:var(--muted);font-size:.85rem}
+.hidden{display:none}
+@media(max-width:700px){.grid,.two{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}.hero{padding:22px}}
+</style>
+</head>
+<body>
+<header><div class="brand">THE <span>DIVIDE</span></div><small>More context. Less shouting.</small></header>
+<nav>
+<button class="active" data-page="explore">Explore</button><button data-page="briefing">Daily briefing</button><button data-page="about">How it works</button>
+</nav>
+<main>
+<section id="explore">
+<div class="hero"><h1>Same story.<br>Different perspectives.</h1><p>Compare how left-leaning and right-leaning sources frame the issues—and separate arguments, evidence, and spin.</p></div>
+<div class="sectionhead"><h2 style="margin:0">Choose a topic</h2><span class="note">Demo content below; live feeds are the next integration.</span></div>
+<div class="topics" id="topics"></div>
+<div class="sectionhead"><h2 id="topicTitle" style="margin:0">Immigration</h2><span class="note">Perspective comparison</span></div>
+<div class="grid">
+<article class="card left"><div class="tag">Left-leaning perspective</div><h3>Progressive priorities</h3><div id="leftStories"></div></article>
+<article class="card right"><div class="tag">Right-leaning perspective</div><h3>Conservative priorities</h3><div id="rightStories"></div></article>
+</div>
+<div class="callout"><h3>What to compare</h3><div class="two"><div><b>Shared facts</b><p class="note">What both accounts agree happened, and what reliable records establish.</p></div><div><b>Disputed interpretation</b><p class="note">Where they differ on causes, responsibility, trade-offs, or solutions.</p></div></div></div>
+</section>
+<section id="briefing" class="hidden">
+<div class="hero"><h1>Your daily briefing</h1><p>A quick, balanced scan of the major stories being debated across the political spectrum.</p></div>
+<div class="callout"><h3>Briefing format</h3><ol><li>Top shared stories of the day</li><li>What Democrats / liberals emphasize</li><li>What Republicans / conservatives emphasize</li><li>Evidence check and important context</li><li>Where there is agreement—and what remains disputed</li></ol><p class="note">Your 8 AM briefing automation is active in ChatGPT. This page is not connected to that delivery yet.</p></div>
+<div class="callout"><h3>Build your briefing preferences</h3><label for="topicsPref">Topics you care about</label><br><select id="topicsPref" multiple size="6" style="margin:10px 0;width:100%"></select><p><button class="primary" id="savePrefs">Save on this device</button> <span id="saved" class="note"></span></p></div>
+</section>
+<section id="about" class="hidden">
+<div class="hero"><h1>Fair comparison, not false balance.</h1><p>The Divide is designed to make political coverage easier to understand—not to pretend every claim is equally supported.</p></div>
+<div class="callout"><h3>Editorial guardrails</h3><ul><li>Label sources and their general editorial orientation transparently.</li><li>Distinguish reporting, opinion, advocacy, and commentary.</li><li>Show evidence and primary sources where possible.</li><li>Do not give unsupported claims equal weight with well-established facts.</li><li>Highlight uncertainty and genuine points of agreement.</li></ul></div>
+<div class="callout"><h3>Sharing</h3><p>Once hosted, this app will have one URL you can send to Stephanie. Each of you can add it to your phone's home screen.</p></div>
+</section>
+</main>
+<footer>THE DIVIDE · Prototype v1 · Sample stories are illustrative, not current reporting.</footer>
+<script>
+const topics=["Immigration","Economy & inflation","Healthcare","Climate & energy","Foreign policy","Elections"];
+const sample={
+"Immigration":[["Border enforcement and humanitarian protections","Progressive coverage often weighs due process, asylum access, family impacts, and labor needs."],["Local services and federal policy","Reporting may examine how enforcement changes affect communities and institutions."]],
+"Economy & inflation":[["Prices, wages, and household costs","Coverage may emphasize purchasing power, wage growth, and distributional effects."],["Taxes, spending, and regulation","Coverage may focus on fiscal policy, business costs, and incentives." ]],
+"Healthcare":[["Coverage and affordability","Debates often center on access, premiums, prescription costs, and public programs."],["Competition and choice","Arguments may emphasize market competition, provider choice, and government scope."]],
+"Climate & energy":[["Climate risk and clean-energy investment","Coverage may stress emissions, climate impacts, and transition investment."],["Energy reliability and affordability","Coverage may stress prices, grid reliability, jobs, and domestic production."]],
+"Foreign policy":[["Diplomacy and alliances","Coverage may prioritize multilateral cooperation, aid, and diplomatic strategy."],["Deterrence and national interests","Coverage may prioritize military readiness, leverage, and strategic interests."]],
+"Elections":[["Voting access and representation","Coverage may emphasize participation, election administration, and access."],["Election integrity and administration","Coverage may emphasize safeguards, verification, and confidence in results."]]
+};
+const links={
+left:[["AP News","https://apnews.com/"],["NPR","https://www.npr.org/"],["The Guardian – US","https://www.theguardian.com/us"]],
+right:[["Reuters","https://www.reuters.com/"],["Fox News","https://www.foxnews.com/"],["The Wall Street Journal","https://www.wsj.com/"]]
+};
+let current=topics[0];
+const topicBox=document.getElementById("topics");
+topics.forEach(t=>{let b=document.createElement("button");b.className="chip"+(t===current?" selected":"");b.textContent=t;b.onclick=()=>select(t);topicBox.append(b)});
+function renderStories(id,side){const el=document.getElementById(id);el.innerHTML="";(sample[current]||[]).forEach((s,i)=>{let d=document.createElement("div");d.className="story";d.innerHTML=`<b>${s[0]}</b><p>${s[1]}</p>`;el.append(d)});links[side].forEach(l=>{let d=document.createElement("div");d.className="story";d.innerHTML=`<a href="${l[1]}" target="_blank" rel="noopener">${l[0]} ↗</a><p>Open source homepage (not a matched article).</p>`;el.append(d)})}
+function select(t){current=t;document.getElementById("topicTitle").textContent=t;document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("selected",b.textContent===t));renderStories("leftStories","left");renderStories("rightStories","right")}
+select(current);
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x===b));["explore","briefing","about"].forEach(p=>document.getElementById(p).classList.toggle("hidden",p!==b.dataset.page))});
+const pref=document.getElementById("topicsPref");topics.forEach(t=>{let o=document.createElement("option");o.text=t;o.value=t;pref.append(o)});
+document.getElementById("savePrefs").onclick=()=>{localStorage.setItem("divideTopics",JSON.stringify([...pref.selectedOptions].map(x=>x.value)));document.getElementById("saved").textContent="Saved on this device."};
+try{JSON.parse(localStorage.getItem("divideTopics")||"[]").forEach(t=>[...pref.options].find(o=>o.value===t)?.setAttribute("selected",""))}catch{}
+if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js");\n</script>
+</body></html>
