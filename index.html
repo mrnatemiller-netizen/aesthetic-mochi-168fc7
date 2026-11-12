@@ -1,8 +1,54 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Divide</title><style>
-body{margin:0;background:#081116;color:#e7eef7;font:16px/1.5 system-ui}header,main{padding:22px 5vw}header{border-bottom:1px solid #293b49;position:sticky;top:0;background:#081116ee}h1 span,.a{color:#4de0ce}button,input,select{font:inherit;padding:10px;border-radius:12px;background:#121f29;color:#e7eef7;border:1px solid #293b49}button{cursor:pointer}main{max-width:1000px;margin:auto}.hero h2{font-size:clamp(2.4rem,8vw,4.5rem);line-height:1.05}.muted{color:#9eafbf}.bar{display:flex;gap:8px;flex-wrap:wrap}.bar input{flex:1;min-width:180px}.card{background:#121f29;border:1px solid #293b49;border-radius:16px;padding:16px;margin:14px 0}.source{color:#4de0ce;font-size:.8rem;text-transform:uppercase}.card a{color:#e7eef7;text-decoration:none}.ai{white-space:pre-wrap;border-top:1px solid #293b49;margin-top:12px;padding-top:12px;color:#c5d4e2}</style></head><body><header><h1>THE <span>DIVIDE</span></h1><button onclick="load()">Refresh headlines</button></header><main><section class="hero"><p class="a">NEWS, VIEWED FROM MORE THAN ONE ANGLE</p><h2>Same story.<br><span class="a">Different perspectives.</span></h2><p class="muted">Compare headlines across outlets, explore framing, and read original reporting.</p></section><div class="bar"><input id="q" placeholder="Search headlines" oninput="render()"><select id="f" onchange="render()"><option value="all">All perspectives</option><option value="left">Left / progressive</option><option value="center">Center / wire</option><option value="right">Right / conservative</option></select></div><p class="muted" id="status">Loading…</p><section id="list"></section><div class="card"><h2>Sources & method</h2><p>Outlet labels describe broad orientation, not truth or quality. AI sees headlines/source metadata only, not article text; it is not fact-checking. Read original reporting; balanced presentation does not mean every claim has equal evidence.</p></div></main><script>
-let data=[];function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-async function load(){status.textContent='Fetching feeds…';try{let r=await fetch('/.netlify/functions/news'),d=await r.json();if(!r.ok)throw Error(d.error);data=d.articles||[];status.textContent='Updated '+new Date().toLocaleTimeString()+' · '+data.length+' headlines · '+d.feedErrors+' feed errors';render()}catch(e){status.textContent='News function error: '+e.message+' (check Netlify deploy logs)'}}
-function render(){let q=document.getElementById('q').value.toLowerCase(),f=document.getElementById('f').value;list.innerHTML=data.filter(a=>(!q||(a.title+a.source).toLowerCase().includes(q))&&(f==='all'||a.bias===f)).map(a=>`<article class="card"><div class="source">${esc(a.source)} · ${esc(a.biasLabel)}</div><h3><a target="_blank" href="${esc(a.link)}">${esc(a.title)}</a></h3><p class="muted">${esc(a.date||'')}</p><div class="bar"><a target="_blank" href="${esc(a.link)}"><button>Read original ↗</button></a><button onclick="ask(this,'summary','${esc(a.id)}')">AI summary</button><button onclick="ask(this,'compare','${esc(a.id)}')">Compare perspectives</button></div><div class="ai"></div></article>`).join('')||'No matching headlines'}
-async function ask(b,mode,id){let box=b.closest('.card').querySelector('.ai');b.disabled=true;box.textContent='AI working…';try{let r=await fetch('/.netlify/functions/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode,articles:data.filter(a=>a.id===id)})}),d=await r.json();if(!r.ok)throw Error(d.error);box.textContent=d.text}catch(e){box.textContent='AI unavailable: '+e.message}finally{b.disabled=false}}
-load();setInterval(load,900000);
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071a18"><link rel="manifest" href="/manifest.json">
+<title>The Divide — Daily Brief</title>
+<style>
+:root{--bg:#071a18;--panel:#102522;--panel2:#142e2a;--ink:#eaf5f1;--muted:#9db6af;--teal:#71e4d2;--line:#28443e;--blue:#8fc7ff;--red:#ffb6a8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:24px 18px 18px;max-width:1100px;margin:auto}h1{margin:0;font-size:clamp(30px,5vw,48px);letter-spacing:-1.5px}h1 span{color:var(--teal)}.tag{color:var(--muted);margin:4px 0 18px}
+nav{display:flex;gap:8px;flex-wrap:wrap}button,.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:10px 14px;border-radius:12px;font-weight:650;cursor:pointer}button.active{background:var(--teal);color:#06201b;border-color:var(--teal)}
+main{max-width:1100px;margin:auto;padding:0 18px 40px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}.toolbar select,.toolbar input{background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:11px;border-radius:10px}
+.status{color:var(--muted);font-size:14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--teal);font-weight:750}.card h2{font-size:19px;line-height:1.3;margin:8px 0}.card p{color:#c4d5d0;margin:9px 0}.meta{font-size:13px;color:var(--muted)}a{color:var(--teal)}.source{display:inline-block;margin-top:10px;font-weight:700}.empty{padding:24px;border:1px dashed var(--line);border-radius:14px;color:var(--muted)}
+section{margin:22px 0}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.sectionhead h2{margin:0 0 12px}.note{background:#102522;border-left:3px solid var(--teal);padding:12px 14px;border-radius:8px;color:var(--muted);font-size:14px}
+footer{max-width:1100px;margin:auto;padding:20px 18px 40px;color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:no-preference){button:hover{transform:translateY(-1px)}}
+</style>
+</head>
+<body>
+<header><h1>The <span>Divide</span></h1><p class="tag">A daily briefing across perspectives—not a contest of headlines.</p>
+<nav><button class="active" data-view="brief">Daily brief</button><button data-view="topics">All headlines</button><button data-view="about">How it works</button></nav></header>
+<main>
+<div class="toolbar"><button id="refresh">↻ Refresh headlines</button><select id="filter"><option value="all">All sources</option><option value="left">Left / center-left sources</option><option value="right">Right / center-right sources</option><option value="center">Center / public-service sources</option></select><input id="search" placeholder="Search headlines…" aria-label="Search headlines"><span id="status" class="status">Ready</span></div>
+<div id="content"></div>
+</main>
+<footer>Free edition • Public RSS headlines • No account or API key required. Source labels describe editorial orientation, not the truth of an individual story. Read the linked reporting and verify consequential claims.</footer>
+<script>
+const $=s=>document.querySelector(s);
+let articles=[],view="brief";
+const label={left:"Left / center-left",right:"Right / center-right",center:"Center / public-service"};
+function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function card(a){return `<article class="card"><div class="eyebrow">${esc(label[a.perspective]||"Source")} · ${esc(a.source)}</div><h2>${esc(a.title)}</h2><p>${esc(a.description||"Open the original report for details and context.")}</p><div class="meta">${a.date?new Date(a.date).toLocaleString():""} </div><a class="source" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">Read at source ↗</a></article>`}
+function render(){
+ const q=$("#search").value.toLowerCase(),f=$("#filter").value;
+ let list=articles.filter(a=>(f==="all"||a.perspective===f)&&(`${a.title} ${a.description} ${a.source}`).toLowerCase().includes(q));
+ if(view==="about"){ $("#content").innerHTML=`<section class="card"><h2>How The Divide works</h2><p>This free build collects RSS headlines and short feed descriptions from a small mix of publishers. It does not scrape full articles, use an AI API, or claim to fact-check.</p><p>Perspective tags are broad editorial tendencies—not labels for every story. A headline appearing here is not an endorsement.</p><p><b>Use it responsibly:</b> open original sources, compare reporting, check dates and primary documents, and separate verified facts from opinion or analysis.</p><p>Feeds can fail or change. Refresh to retry. No personal data is sent to a server by this page.</p></section>`;return}
+ if(!list.length){$("#content").innerHTML='<div class="empty">No matching headlines. Try another filter or refresh.</div>';return}
+ if(view==="brief"){
+   let groups=["center","left","right"];
+   $("#content").innerHTML=groups.map(g=>{let arr=list.filter(a=>a.perspective===g).slice(0,5);return `<section><div class="sectionhead"><h2>${label[g]}</h2><span class="meta">${arr.length} headlines</span></div><div class="grid">${arr.map(card).join("")||'<div class="empty">No headlines in this group right now.</div>'}</div></section>`}).join("");
+ }else $("#content").innerHTML=`<section><div class="sectionhead"><h2>Latest headlines</h2><span class="meta">${list.length} items</span></div><div class="grid">${list.map(card).join("")}</div></section>`;
+}
+async function load(){
+ $("#status").textContent="Loading RSS feeds…";$("#refresh").disabled=true;
+ try{let r=await fetch("/.netlify/functions/news",{cache:"no-store"});if(!r.ok)throw Error("Feed function returned "+r.status);let d=await r.json();articles=d.articles||[];$("#status").textContent=`Updated ${new Date().toLocaleTimeString()} · ${articles.length} headlines`;render()}
+ catch(e){$("#status").textContent="Could not load feeds";$("#content").innerHTML=`<div class="empty">The news function isn't responding yet. Check Netlify's latest deploy and Functions logs, then refresh. <br><small>${esc(e.message)}</small></div>`}
+ finally{$("#refresh").disabled=false}
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x===b));view=b.dataset.view;render()});
+$("#refresh").onclick=load;$("#filter").onchange=render;$("#search").oninput=render;
+if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js").catch(()=>{});
+load();
+</script>
+</body></html>
